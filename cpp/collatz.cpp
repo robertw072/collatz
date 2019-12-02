@@ -47,7 +47,7 @@ int main()
 
 	unsigned long long int n = 1;
 
-	while (n < 5000)
+	while (n < 5000000000)
 	{
 		// this loop stores the inegers and collatz sequence lengths in an array
 		collatzList.push_back(make_tuple(n, countCollatz(n)));
