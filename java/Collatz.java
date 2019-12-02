@@ -1,28 +1,26 @@
-import java.io.*;
 import java.util.*;
-import java.lang.*;
 
 public class Collatz
 {
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		// using long for n, as it the largest integer data type available in java
 		long n = 1;
 
 		//Tuple<Long, Integer> tup = new Tuple<Long, Integer>(n, countCollatz(n));
 		// Create an array list to hold integer/length pairs
-		ArrayList<Tuple<Long, Integer>> collatzList = new ArrayList<Tuple<Long, Integer>>();
+		final ArrayList<Tuple<Long, Integer>> collatzList = new ArrayList<Tuple<Long, Integer>>();
 
-		while (n != 10000)
+		while (n != 5000000000L)
 		{
 			collatzList.add(new Tuple<Long, Integer>(n, countCollatz(n)));
 			n++;
 		}
 
 		// comparator to sort the list by length of collatz sequence
-		Comparator<Tuple<Long, Integer>> comparator = new Comparator<Tuple<Long, Integer>>()
+		final Comparator<Tuple<Long, Integer>> comparator = new Comparator<Tuple<Long, Integer>>()
 		{
-			public int compare(Tuple<Long, Integer> tupleA, Tuple<Long, Integer> tupleB)
+			public int compare(final Tuple<Long, Integer> tupleA, final Tuple<Long, Integer> tupleB)
 			{
 				return tupleB.y.compareTo(tupleA.y);
 			}
@@ -30,7 +28,7 @@ public class Collatz
 
 		Collections.sort(collatzList, comparator);	// sorting list by length using comparator
 
-		ArrayList<Tuple<Long, Integer>> small = new ArrayList<Tuple<Long, Integer>>();
+		final ArrayList<Tuple<Long, Integer>> small = new ArrayList<Tuple<Long, Integer>>();
 		System.out.println("The largest collatz sequence lengths sorted by length: ");
 		for (int i = 0; i < 10; i++)
 		{
@@ -39,9 +37,9 @@ public class Collatz
 		}
 
 		// comparator to sort the list by length of collatz sequence
-		Comparator<Tuple<Long, Integer>> comparator1 = new Comparator<Tuple<Long, Integer>>()
+		final Comparator<Tuple<Long, Integer>> comparator1 = new Comparator<Tuple<Long, Integer>>()
 		{
-			public int compare(Tuple<Long, Integer> tupleA, Tuple<Long, Integer> tupleB)
+			public int compare(final Tuple<Long, Integer> tupleA, final Tuple<Long, Integer> tupleB)
 			{
 				return tupleB.x.compareTo(tupleA.x);
 			}
