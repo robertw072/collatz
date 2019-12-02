@@ -31,7 +31,7 @@ namespace Collatz
 
 			List<Tuple<ulong, int>> collatzList = new List<Tuple<ulong, int>>();	// list to hold (n, length) pairs
 
-			while (n < 5000)
+			while (n < 5000000000)
 			{
 				collatzList.Add(new Tuple<ulong, int>(n, CollatzMethods.CountCollatz(n))); // store tuples in list
 				n++;
