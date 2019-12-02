@@ -13,7 +13,7 @@ def countCollatz(n):
 
 collatzList = []    # declare the list to hold the integer/length pairs of the sequence
 n = 1               # value to compute the length of the collatz sequence for
-for i in range(5000):
+for i in range(5000000000):
     tup1 = (n, countCollatz(n))  # integer/length pair
     collatzList.append(tup1)
     n = n + 1                   # increment the integer to be computed
@@ -21,7 +21,6 @@ for i in range(5000):
 collatzList.sort(key=lambda tup: tup[1], reverse=True)  # sort the list by length of collatz sequence
 
 small = []          # declare the list to hold the 10 largest collatz lengths
-
 
 print("The 10 longest Collatz Sequence lengths sorted by length: ")
 for i in range (9): # print the list of the 10 largest collatz seqences
