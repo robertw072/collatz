@@ -17,7 +17,7 @@ collatz_list = Array{Tuple{Int128, Int}}(undef, 0)
 
 # compute the collatz sequence lengths of each number up to 5 billion
 num = Int128(1)  
-for i = 1:10000
+for i = 1:5000000000
     global num
     tup = (num, count_collatz(num))
     push!(collatz_list, tup)
