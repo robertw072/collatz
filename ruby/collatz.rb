@@ -54,7 +54,7 @@ end
 n = 1                       # holds value to be computed
 collatz_list = Array.new    # array to store integer/length pairs
 
-for i in 0..10000-1
+for i in 0..5000000000-1
     tup = Tuple.new
     tup.num = n
     tup.length = count_collatz(n)
