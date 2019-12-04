@@ -3,33 +3,33 @@ program collatz
 
     ! object to hold integer/length pairs
     type tuple              
-        integer(kind=16)    :: num
-        integer             :: length
+        integer(kind=8)    :: num
+        integer(kind=8)    :: length
     end type tuple
 
     ! declare necessary variables
-    integer(kind=16)       :: n     
-    integer                :: count_collatz ! function variable
+    integer(kind=8)       :: n     
+    integer(kind=8)       :: count_collatz ! function variable
     type(tuple)            :: tup, tmp
     type(tuple), dimension(:), allocatable  :: collatz_list, small
-    integer                :: i, lsup, bubble, count
+    integer(kind=8)       :: i, lsup, bubble, count
+    integer(kind=8)       :: max_value = 5e9
 
-    interface 
-        recursive function count_collatz(in, count)
-            integer(kind=16), intent(in)    :: in
-            integer, intent(in)             :: count
-            integer                         :: out
-        end function count_collatz
+    !interface 
+    !    recursive integer function count_collatz(in)
+    !        integer(kind=16), intent(in)    :: in
+    !        integer                         :: count
+    !    end function count_collatz
 
-    end interface
+    !end interface
 
-    allocate(collatz_list(10000))
+    allocate(collatz_list(max_value))
 
     n = 1
-    do i = 1, 10000          ! compute the collatz sequence lengths and store them
+    do i = 1, max_value          ! compute the collatz sequence lengths and store them
         count = 0
         tup%num = n
-        tup%length = count_collatz(n, count)
+        tup%length = count_collatz(n)
         collatz_list(i) = tup
         n = n + 1        
     end do
@@ -81,22 +81,22 @@ program collatz
     deallocate(small)
 end program collatz
 
-recursive function count_collatz(in, count) result(out)    ! functions that computes the collatz sequence length for a given n
-    integer(kind=16), intent(in)    :: in   ! the integer to be evaluated
-    integer, intent(in)             :: count
-    integer(kind=16)                :: n    ! function variable so we can manipulate the value of the input
-    integer                         :: out
+recursive function count_collatz(in) result(count)    ! functions that computes the collatz sequence length for a given n
+    integer(kind=8), intent(in)    :: in   ! the integer to be evaluated
+    integer(kind=8)                :: count
+    integer(kind=8)                :: n    ! function variable so we can manipulate the value of the input
 
     n = in
-    out = count
+    
     if (n .eq. 1) then
-        out = count
+        count = 0
+        return
     end if
     if (mod(n, int(2, 16)) .eq. int(1, 16)) then
         n = 3*n + 1
-        out = count_collatz(n, out + 1)
+        count = 1 + count_collatz(n)
     else
         n = n / 2
-        out = count_collatz(n, out + 1)
+        count = 1 + count_collatz(n)
     end if
 end function count_collatz
