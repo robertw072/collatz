@@ -19,7 +19,7 @@ for i in range(10):
     length.append(0)
 
 n = 1               # value to compute the length of the collatz sequence for
-max_value = 10000   # collatz values to compute length of
+max_value = 5000000000   # collatz values to compute length of
 for i in xrange(max_value):
     result = countCollatz(n)    # length of collatz sequence for n
     if (result > length[9]):    # determine if result is a max
