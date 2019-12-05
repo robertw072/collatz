@@ -23,13 +23,7 @@ int countCollatz(unsigned long long int n, int count)
     }
 }
 
-// Function to sort the vector of tuples by length of collatz sequence in descending order
-bool sortByLength(const tuple<unsigned long long int, int>& a,
-		  const tuple<unsigned long long int, int>& b)
-{
-	return (get<1>(a) > get<1>(b));
-}
-
+// function to sort list by magnitude of the interger passed to count collatz
 bool sortByMagnitude(const tuple<unsigned long long int, int>& a,
 		     const tuple<unsigned long long int, int>& b)
 {
@@ -41,39 +35,63 @@ int main()
 	// using unsigned long long int for n, as it is the largest integer 
 	// data type available in c++
 	
-	// vector to hold the integer being evaluated and its collatz sequence length
-	vector<tuple<unsigned long long int, int> > collatzList;
+	// array to hold the integer being evaluated and its collatz sequence length
+	tuple<unsigned long long int, int> collatzList[10];
 
-	unsigned long long int n = 1;
-
-	while (n < 5000000000)
-	{
-		// this loop stores the inegers and collatz sequence lengths in an array
-        int count = 0;  // count must be reset to 0 for each recursive call
-		collatzList.push_back(make_tuple(n, countCollatz(n, count)));
-		n++;
-	}
-
-	// sort the whole list by length of collatz sequence
-	sort(collatzList.begin(), collatzList.end(), sortByLength);
-
-	// print the integers ordered by the length of collatz sequence, descending	
-
-	cout << "The integers giving the longest Collatz Sequence length, ordered by length: " << endl;
-	vector<tuple<unsigned long long int, int> > small;
+	// zero the array
 	for (int i = 0; i < 10; i++)
 	{
-		small.push_back(make_tuple(get<0>(collatzList[i]), get<1>(collatzList[i])));
-		cout << get<0>(small[i]) << " " << get<1>(small[i]) << endl;
+		collatzList[i] = make_tuple(0, 0);
+	}
+
+	unsigned long long int n = 1;
+	unsigned long long int max_value = 5e9;
+	unsigned long long int i = 0;
+	
+	while (i < max_value)
+	{
+		// this loop stores the inegers and collatz sequence lengths in an array
+		int count = 0;
+		tuple<unsigned long long int, int> tup = make_tuple(n, countCollatz(n, count)); // compute length of collatz sequence and store as a tuple
+		if (get<1>(tup) > get<1>(collatzList[10]))	// check if new length is a max
+		{
+			int offset = 0;
+			// determine where new max should go in list
+			while (get<1>(tup) < get<1>(collatzList[offset]))
+			{
+				offset = offset + 1;
+			}
+
+			int temp = offset;
+			offset = 10;
+			// adjust other values of list 
+			while (offset > temp)
+			{
+				collatzList[offset] = collatzList[offset - 1];
+				offset = offset - 1;
+			}
+			collatzList[temp] = tup;
+		}
+		n++;	//increment n
+		i++;	// increment i
+	}
+
+	// print the 10 largest collatz sequences lengths sorted by length
+	cout << "The 10 largest collatz sequence lengths sorted by length: " << endl;
+	for (int j = 0; j < 10; j++)
+	{
+		cout << get<0>(collatzList[j]) << " " << get<1>(collatzList[j]) << endl;
 	}
 
 	// print the integers ordered by the magnitude of the integers, descending
 	
-	sort(small.begin(), small.end(), sortByMagnitude);
+	// sort the list by magnitude
+	sort(begin(collatzList), end(collatzList), sortByMagnitude);
+
 	cout << "The integers giving the longest Collatz Sequence length, ordered by magnitude: " << endl;
-	for (int i = 0; i < 10; i++)
+	for (int j = 0; j < 10; j++)
 	{
-		cout << get<0>(small[i]) << " " << get<1>(small[i]) << endl;
+		cout << get<0>(collatzList[j]) << " " << get<1>(collatzList[j]) << endl;
 	}
 
 	return 0;
