@@ -28,37 +28,46 @@ namespace RecursedCollatz
 		static void Main(string[] args)
 		{
 			ulong n = 1; // ulong is the largest integer data type, so we will store the n values as a ulong
-            int count;
+			ulong max_val = 5000000000;
+			Tuple<ulong, int>[] collatzList = new Tuple<ulong, int>[10];	// array to hold (n, length) pairs
+			
+			// zero the cube
+			for (int j = 0; j < 10; j++)
+				collatzList[j] = new Tuple<ulong, int>((ulong) 0, 0);
 
-			List<Tuple<ulong, int>> collatzList = new List<Tuple<ulong, int>>();	// list to hold (n, length) pairs
-
-			while (n < 5000000000)
+			ulong i = 0;
+			while (i < max_val)
 			{
-                count = 0;
-				collatzList.Add(new Tuple<ulong, int>(n, CollatzMethods.CountCollatz(n, count))); // store tuples in list
+				int count = 0;
+				// compute the value of the collatz sequence length and store pair
+ 				Tuple<ulong, int> tup = new Tuple<ulong, int> (n, CollatzMethods.CountCollatz(n, count));
+				if (tup.Item2 > collatzList[9].Item2)	// check if tup has a new max
+				{
+					int offset = 0;
+					while(tup.Item2 < collatzList[offset].Item2) // find where it should go
+					{
+						offset = offset + 1;
+					}
+
+					int temp = offset;
+					offset = 9;
+					while (offset > temp)	// shift the other values in the array right
+					{
+						collatzList[offset] = collatzList[offset - 1];
+						offset = offset - 1;
+					}
+					collatzList[temp] = tup;
+				}
 				n++;
+				i++;
 			}
 
-			List<Tuple<ulong, int>> small = new List<Tuple<ulong, int>>(); // this list holds the largest collatz sizes
-			// now we sort the list by length of collatz sequence and print it
-			collatzList.Sort((t1, t2) => t2.Item2.CompareTo(t1.Item2));	
-
+			// sort the list by length
 			Console.WriteLine("The list the longest Collatz sequences sorted by list length: ");
-			for (int i = 0; i < 10; i++)
+			for (int j = 0; j < 10; j++)
 			{
-				Console.WriteLine(collatzList[i]);
-				small.Add(collatzList[i]); // store the values in the new list to sort later
+				Console.WriteLine(collatzList[j]);
 			} 
-
-			// sort list by magnitude of integers and print
-			small.Sort((t1, t2) => t2.Item1.CompareTo(t1.Item1));
-
-			Console.WriteLine("The list the longest Collatz sequences sorted by magnitude: ");
-			for (int i = 0; i < 10; i++)
-			{
-				Console.WriteLine(small[i]);
-			} 
-
 		}
 	}
 }
