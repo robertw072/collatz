@@ -3,88 +3,79 @@ program collatz
 
     ! object to hold integer/length pairs
     type tuple              
-        integer(kind=16)    :: num
-        integer             :: length
+        integer(kind=8)    :: num
+        integer(kind=8)    :: length
     end type tuple
 
-    ! declare necessary variables
-    integer(kind=16)       :: n     
-    integer                :: count_collatz ! function variable
+    ! declare necessary variables   
+    integer(kind=8)       :: count_collatz ! function variable
     type(tuple)            :: tup, tmp
-    type(tuple), dimension(:), allocatable  :: collatz_list, small
-    integer                :: i, lsup, bubble
+    type(tuple), dimension(10)  :: collatz_list
+    integer               :: j, offset, temp
+    integer(kind=8)       :: i, max_value = 5e9
+    integer               :: lsup, bubble
 
-    interface 
-        function count_collatz(in)
-            integer(kind=16), intent(in)    :: in
-            integer                         :: count
-        end function count_collatz
-
-    end interface
-
-    allocate(collatz_list(5000))
-
-    n = 1
-    do i = 1, 5000          ! compute the collatz sequence lengths and store them
-        tup%num = n
-        tup%length = count_collatz(n)
-        collatz_list(i) = tup
-        n = n + 1        
+    ! zero the array
+    do j = 1, 10
+        tmp%num = 0
+        tmp%length = 0
+        collatz_list(j) = tmp 
     end do
 
-    ! sorting by length, bubble sort
+    do i = 1, max_value          ! compute the collatz sequence lengths and store them
+        tup%num = i
+        tup%length = count_collatz(i)
+        if (tup%length .gt. collatz_list(10)%length) then   ! check if the new collatz sequence length is a max
+            offset = 0                                      ! variable to track where the new max should go in the list
+            do while (tup%length .lt. collatz_list(offset)%length)  ! find where the new max should go
+                offset = offset + 1
+            end do
+
+            ! move values of list into correct position 
+            temp = offset
+            offset = 10
+            do while (offset > temp)
+                collatz_list(offset) = collatz_list(offset-1)
+                offset = offset - 1
+            end do  
+            collatz_list(temp) = tup    ! insert the integer/length pair into the list
+        end if      
+    end do
+
+    ! print the list of 10 largest collatz sequence lengths sorted by length
+    print *, "The 10 largest collatz sequence lengths sorted by length: "
+    do i = 1, 10
+        print *, collatz_list(i)
+    end do
+
+    ! sort by magnitude, bubblesort
     lsup = size(collatz_list)
     do while(lsup .gt. 1)
         bubble = 0 
-        do i = 1, (lsup - 1)
-            if (collatz_list(i)%length .lt. collatz_list(i+1)%length) then
-                tmp = collatz_list(i)
-                collatz_list(i) = collatz_list(i+1)
-                collatz_list(i+1) = tmp
-                bubble = i
+        do j = 1, (lsup - 1)
+            if (collatz_list(j)%num .lt. collatz_list(j+1)%num) then
+                tmp = collatz_list(j)
+                collatz_list(j) = collatz_list(j+1)
+                collatz_list(j+1) = tmp
+                bubble = j
             end if
         end do
         lsup = bubble
     end do
 
-    allocate(small(10))
-
-    print *, "The 10 integers with the longest collatz sequence lengths sorted by length: "
+    ! print the list of 10 largest collatz sequence lengths sorted by length
+    print *, "The 10 largest collatz sequence lengths sorted by magnitude: "
     do i = 1, 10
         print *, collatz_list(i)
-        small(i) = collatz_list(i)       ! store the 10 longest lengths in the smaller vector for easy sort
     end do
-
-    ! sort by magnitude, also bubblesort
-    lsup = size(small)
-    do while(lsup .gt. 1)
-        bubble = 0 
-        do i = 1, (lsup - 1)
-            if (small(i)%num .lt. small(i+1)%num) then
-                tmp = small(i)
-                small(i) = small(i+1)
-                small(i+1) = tmp
-                bubble = i
-            end if
-        end do
-        lsup = bubble
-    end do
-
-    print *, "The 10 integers with the longest collatz sequences sorted by magnitude: "
-    do i = 1, 10
-        print *, small(i)
-    end do
-
-    deallocate(collatz_list)
-    deallocate(small)
 end program collatz
 
 function count_collatz(in) result(count)    ! functions that computes the collatz sequence length for a given n
-    integer(kind=16), intent(in)    :: in   ! the integer to be evaluated
-    integer                         :: count
-    integer(kind=16)                :: n    ! function variable so we can manipulate the value of the input
+    integer(kind=8), intent(in)    :: in   ! the integer to be evaluated
+    integer(kind=8)                :: count
+    integer(kind=8)                :: n    ! function variable so we can manipulate the value of the input
 
-    count = 1                               ! holds the length of the sequence
+    count = 0                               ! holds the length of the sequence
     n = in
     do while(n .ne. int(1, 16))
         if (mod(n, int(2, 16)) .eq. int(1, 16)) then    ! if even
