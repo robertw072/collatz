@@ -13,7 +13,7 @@ program collatz
     type(tuple)            :: tup, tmp
     type(tuple), dimension(10)  :: collatz_list
     integer               :: j, offset, temp
-    integer(kind=8)       :: i, max_value = 10000
+    integer(kind=8)       :: i, max_value = 5e9
     integer               :: lsup, bubble
 
     ! zero the array
