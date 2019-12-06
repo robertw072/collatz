@@ -14,18 +14,6 @@
 
 (defvar count_ 0)
 (defvar n 1)
-;(write (count_collatz n count_))
-;(terpri)
-
-(setq collatz_list(make-array 5000000000 :fill-pointer 0))   ; create a vector to hold integer/length pairs
-
-(defvar tuple)  ; variable to hold integer/length pairs
-(loop while (< n 5000000000) do
-    (setq tuple (cons n (count_collatz n count_)))  ; store the integer/length pairs
-    (vector-push tuple collatz_list)                ; add the tuple to the vector
-    (setq n (+ n 1))
-    (setq count_ 0)                                 ; reset count to zero for the next function call
-)
-
-(write collatz_list)
+(write (count_collatz n count_))
 (terpri)
+
