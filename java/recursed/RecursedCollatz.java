@@ -7,7 +7,7 @@ public class RecursedCollatz
 		// using long for n, as it the largest integer data type available in java
         long n = 1;
 		int count;
-		long max_value = 10000;
+		long max_value = 5000000000;
 
 		//Tuple<Long, Integer> tup = new Tuple<Long, Integer>(n, countCollatz(n));
 		// Create an array list to hold integer/length pairs
@@ -43,6 +43,7 @@ public class RecursedCollatz
 			n = n + 1;
 		}
 
+		// print the 10 largest collatz numbers sorted by length
 		System.out.println("The largest collatz sequence lengths sorted by length: ");
 		for (int i = 0; i < 10; i++)
 		{
@@ -68,19 +69,20 @@ public class RecursedCollatz
 
 	}
 
+	// recursive function to compute the collatz sequence length of n
 	public static int countCollatz(long n, int count)
-	{
-        if (n == 1)
-            return count;
-        if (n%2 == 1)
+	{	
+        if (n == 1)								// if n = 1, stop
+            return count;						
+        if (n%2 == 1)							// if n is odd
         {
             n = 3*n + 1;
-            return countCollatz(n, count+1);
+            return countCollatz(n, count+1);	// recur
         }
-        else 
+        else 									// else n is even
         {
             n = n / 2;
-            return countCollatz(n, count+1);
+            return countCollatz(n, count+1);	// recur
         }
 	}
 }

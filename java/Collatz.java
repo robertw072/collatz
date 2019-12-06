@@ -5,38 +5,53 @@ public class Collatz
 	public static void main(final String[] args)
 	{
 		// using long for n, as it the largest integer data type available in java
-		long n = 1;
+        long n = 1;
+		int count;
+		long max_value = 5000000000;
 
-		//Tuple<Long, Integer> tup = new Tuple<Long, Integer>(n, countCollatz(n));
+		// I use a tuple class that is also included in the git repository, x is the number the collatz length is computed for,
+		// y is the length of the collatz sequence
+		// To compile -> javac Collatz.java Tuple.java
+		
 		// Create an array list to hold integer/length pairs
 		final ArrayList<Tuple<Long, Integer>> collatzList = new ArrayList<Tuple<Long, Integer>>();
 
-		while (n != 5000000000L)
+		// zero the list
+		for (int i = 0; i < 10; i++)
 		{
-			collatzList.add(new Tuple<Long, Integer>(n, countCollatz(n)));
-			n++;
+			collatzList.add(new Tuple<Long, Integer>((long) 0, 0));
 		}
 
-		// comparator to sort the list by length of collatz sequence
-		final Comparator<Tuple<Long, Integer>> comparator = new Comparator<Tuple<Long, Integer>>()
+		for (int i = 0; i < max_value; i++)
 		{
-			public int compare(final Tuple<Long, Integer> tupleA, final Tuple<Long, Integer> tupleB)
+			Tuple<Long, Integer> tup = new Tuple<Long,Integer> (n, countCollatz(n));
+			if (tup.y > collatzList.get(9).y)									// see if tup has a new max length
 			{
-				return tupleB.y.compareTo(tupleA.y);
+				int offset = 0;
+				while (tup.y < collatzList.get(offset).y)						// put it in its place in the list
+				{
+					offset = offset + 1;
+				}
+
+				int temp = offset;
+				offset = 9;
+				while (offset > temp)											// shift the other elements into proper place
+				{
+					collatzList.set(offset, collatzList.get(offset - 1));
+					offset = offset - 1;
+				}
+				collatzList.set(temp, tup);										// store the tuple in a list
 			}
-		};
+			n = n + 1;
+		}
 
-		Collections.sort(collatzList, comparator);	// sorting list by length using comparator
-
-		final ArrayList<Tuple<Long, Integer>> small = new ArrayList<Tuple<Long, Integer>>();
 		System.out.println("The largest collatz sequence lengths sorted by length: ");
 		for (int i = 0; i < 10; i++)
 		{
-			small.add(collatzList.get(i));
-			System.out.println(small.get(i));
+			System.out.println(collatzList.get(i));
 		}
 
-		// comparator to sort the list by length of collatz sequence
+		// comparator to sort the list by magnitude of n
 		final Comparator<Tuple<Long, Integer>> comparator1 = new Comparator<Tuple<Long, Integer>>()
 		{
 			public int compare(final Tuple<Long, Integer> tupleA, final Tuple<Long, Integer> tupleB)
@@ -45,20 +60,18 @@ public class Collatz
 			}
 		};
 
-		Collections.sort(small, comparator1);
+		Collections.sort(collatzList, comparator1);
 
 		System.out.println("The largest collatz sequence lengths sorted by magnitude: ");
 		for (int i = 0; i < 10; i++)
 		{
-			System.out.println(small.get(i));
+			System.out.println(collatzList.get(i));
 		}
-
 	}
 
 	public static int countCollatz(long n)
 	{
-		int count = 1; // keeps track of the length of the collatz sequence
-			       // starts at 1 since the 1 at the end of the sequence won't be counted
+		int count = 0; // keeps track of the length of the collatz sequence
 		
 		// follow steps until n = 1
 		while (n != 1)
