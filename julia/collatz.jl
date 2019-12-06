@@ -26,7 +26,7 @@ end
 
 # compute the collatz sequence lengths of each number up to 5 billion
 num = Int128(1)                                     # number to compute collatz length of
-max_value = Int128(10000)  
+max_value = Int128(5000000000)  
 for i = 1:max_value
     global num
     tup = (num, count_collatz(num))
